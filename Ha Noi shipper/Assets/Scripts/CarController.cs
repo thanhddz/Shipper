@@ -11,7 +11,7 @@ public class CarController : MonoBehaviour
     private Vector2 position;
     public float speech;
     
-    private float rotationz = 0;
+    public float rotationz = 0;
     public int checkDirection = 0;
 
     private Vector3 begin;
@@ -19,6 +19,7 @@ public class CarController : MonoBehaviour
     public Vector3 mouse;
     public GameObject player;
 
+    public float angle;
     void Start()
     {
         this.GetComponent<SpriteRenderer>().sprite = player.GetComponent<PlayerProfile>().player.prefab;
@@ -32,9 +33,10 @@ public class CarController : MonoBehaviour
         position += direction * Time.deltaTime * speech;
         this.transform.position = position;
         direction = top.position - bot.position;
-
-        TurnCar();
-        DirectionController();
+        if(Input.GetKeyDown(KeyCode.Space))
+            print(transform.localEulerAngles);
+        //TurnCar();
+        DirectionController();           
     }
 
     void DirectionController()
@@ -53,31 +55,15 @@ public class CarController : MonoBehaviour
             {
                 if (mouse.x > 0)
                 {
-                    if (rotationz != -90)
-                    {
-                        rotationz += -10;
-                        this.transform.Rotate(0, 0, -10);
-                    }
-                    if (rotationz == -90)
-                    {
-                        rotationz = 0;
-                        mouse = new Vector3(0, 0, 0);
-                        checkDirection = 1;
-                    }
+                    StopCoroutine(TurnUp1());
+                    StartCoroutine(TurnRight0());
+                    checkDirection = 1;
                 }
                 if (mouse.x < 0)
                 {
-                    if (rotationz != 90)
-                    {
-                        rotationz += 10;
-                        this.transform.Rotate(0, 0, 10);
-                    }
-                    if (rotationz == 90)
-                    {
-                        rotationz = 0;
-                        mouse = new Vector3(0, 0, 0);
-                        checkDirection = 3;
-                    }
+                    StopCoroutine(TurnUp3());
+                    StartCoroutine(TurnLeft0());
+                    checkDirection = 3;
                 }
             }
         }
@@ -88,31 +74,15 @@ public class CarController : MonoBehaviour
             {
                 if (mouse.y > 0)
                 {
-                    if (rotationz != 90)
-                    {
-                        rotationz += 10;
-                        this.transform.Rotate(0, 0, 10);
-                    }
-                    if (rotationz == 90)
-                    {
-                        rotationz = 0;
-                        mouse = new Vector3(0, 0, 0);
-                        checkDirection = 0;
-                    }
+                    StopCoroutine(TurnRight0());
+                    StartCoroutine(TurnUp1());
+                    checkDirection = 0;
                 }
                 if (mouse.y < 0)
                 {
-                    if (rotationz != -90)
-                    {
-                        rotationz += -10;
-                        this.transform.Rotate(0, 0, -10);
-                    }
-                    if (rotationz == -90)
-                    {
-                        rotationz = 0;
-                        mouse = new Vector3(0, 0, 0);
-                        checkDirection = 2;
-                    }
+                    StopCoroutine(TurnRight2());
+                    StartCoroutine(TurnDown1());
+                    checkDirection = 2;
                 }
             }
         }
@@ -123,31 +93,16 @@ public class CarController : MonoBehaviour
             {
                 if (mouse.x > 0)
                 {
-                    if (rotationz != 90)
-                    {
-                        rotationz += 10;
-                        this.transform.Rotate(0, 0, 10);
-                    }
-                    if (rotationz == 90)
-                    {
-                        rotationz = 0;
-                        mouse = new Vector3(0, 0, 0);
-                        checkDirection = 1;
-                    }
+                    StopCoroutine(TurnDown1());
+                    StartCoroutine(TurnRight2());
+                    checkDirection = 1;
+                    
                 }
                 if (mouse.x < 0)
                 {
-                    if (rotationz != -90)
-                    {
-                        rotationz += -10;
-                        this.transform.Rotate(0, 0, -10);
-                    }
-                    if (rotationz == -90)
-                    {
-                        rotationz = 0;
-                        mouse = new Vector3(0, 0, 0);
-                        checkDirection = 3;
-                    }
+                    StopCoroutine(TurnDown3());
+                    StartCoroutine(TurnLeft2());
+                    checkDirection = 3;                   
                 }
             }
         }
@@ -158,112 +113,202 @@ public class CarController : MonoBehaviour
             {
                 if (mouse.y > 0)
                 {
-                    if (rotationz != -90)
-                    {
-                        rotationz += -10;
-                        this.transform.Rotate(0, 0, -10);
-                    }
-                    if (rotationz == -90)
-                    {
-                        rotationz = 0;
-                        mouse = new Vector3(0, 0, 0);
-                        checkDirection = 0;
-                    }
+                    StopCoroutine(TurnLeft0());
+                    StartCoroutine(TurnUp3());
+                    checkDirection = 0;
+                   
                 }
                 if (mouse.y < 0)
                 {
-                    if (rotationz != 90)
-                    {
-                        rotationz += 10;
-                        this.transform.Rotate(0, 0, 10);
-                    }
-                    if (rotationz == 90)
-                    {
-                        rotationz = 0;
-                        mouse = new Vector3(0, 0, 0);
-                        checkDirection = 2;
-                    }
+                    StopCoroutine(TurnLeft2());
+                    StartCoroutine(TurnDown3());
+                    checkDirection = 2;
+                    
                 }
             }
         }
     }
 
-    void TurnCar()
+    IEnumerator TurnRight0()
     {
-        if (checkDirection == 0 || checkDirection == 1 || checkDirection == 3)
+        float t = transform.localEulerAngles.z;
+        
+        while(t > -90)
         {
-            //turn right
-            if (Input.GetKey(KeyCode.RightArrow))
-            {
-                if (rotationz > -60)
-                {
-                    rotationz += -5;
-                    this.transform.Rotate(0, 0, -5);
-                }
-                speech = 8;
-            }
-            if (Input.GetKeyUp(KeyCode.RightArrow))
-            {
-                this.transform.Rotate(0, 0, -rotationz);
-                rotationz = 0;
-                speech = 5;
-            }
-
-            //turn left
-            if (Input.GetKey(KeyCode.LeftArrow))
-            {
-                if (rotationz < 60)
-                {
-                    rotationz += 5;
-                    this.transform.Rotate(0, 0, 5);
-                }
-                speech = 8;
-            }
-            if (Input.GetKeyUp(KeyCode.LeftArrow))
-            {
-                this.transform.Rotate(0, 0, -rotationz);
-                rotationz = 0;
-                speech = 5;
-            }
-        }
-
-        if (checkDirection == 2)
-        {
-            //turn left
-            if (Input.GetKey(KeyCode.LeftArrow))
-            {
-                if (rotationz > -60)
-                {
-                    rotationz += -5;
-                    this.transform.Rotate(0, 0, -5);
-                }
-                speech = 8;
-            }
-            if (Input.GetKeyUp(KeyCode.LeftArrow))
-            {
-                this.transform.Rotate(0, 0, -rotationz);
-                rotationz = 0;
-                speech = 5;
-            }
-
-            //turn right
-            if (Input.GetKey(KeyCode.RightArrow))
-            {
-                if (rotationz < 60)
-                {
-                    rotationz += 5;
-                    this.transform.Rotate(0, 0, 5);
-                }
-                speech = 8;
-            }
-            if (Input.GetKeyUp(KeyCode.RightArrow))
-            {
-                this.transform.Rotate(0, 0, -rotationz);
-                rotationz = 0;
-                speech = 5;
-            }
+            t -= 10;
+            Vector3 temp = transform.rotation.eulerAngles;
+            temp = new Vector3( 0, 0, t);
+            transform.rotation =  Quaternion.Euler(temp);
+            yield return null;
         }
     }
+
+    IEnumerator TurnLeft0()  
+    {
+        float t = transform.localEulerAngles.z;
+        while (t < 90)
+        {
+            t += 10;
+            Vector3 temp = transform.rotation.eulerAngles;
+            temp = new Vector3(0, 0, t);
+            transform.rotation = Quaternion.Euler(temp);
+            yield return null;
+        }
+    }
+
+    IEnumerator TurnRight2()
+    {
+        float t = transform.localEulerAngles.z -360;
+        while (t < -90)
+        {
+            t += 10;
+            Vector3 temp = transform.rotation.eulerAngles;
+            temp = new Vector3(0, 0, t);
+            transform.rotation = Quaternion.Euler(temp);
+            yield return null;
+        }
+    }
+
+    IEnumerator TurnLeft2()
+    {
+        float t = transform.localEulerAngles.z;
+        while (t > 90)
+        {
+            t -= 10;
+            Vector3 temp = transform.rotation.eulerAngles;
+            temp = new Vector3(0, 0, t);
+            transform.rotation = Quaternion.Euler(temp);
+            yield return null;
+        }
+    }
+
+    IEnumerator TurnUp1()
+    {
+        float t = transform.localEulerAngles.z - 360;
+        while (t < 0)
+        {
+            t += 10;
+            Vector3 temp = transform.rotation.eulerAngles;
+            temp = new Vector3(0, 0, t);
+            transform.rotation = Quaternion.Euler(temp);
+            yield return null;
+        }
+    }
+
+    IEnumerator TurnDown1()
+    {
+        float t = transform.localEulerAngles.z - 360;
+        while (t > -180)
+        {
+            t -= 10;
+            Vector3 temp = transform.rotation.eulerAngles;
+            temp = new Vector3(0, 0, t);
+            transform.rotation = Quaternion.Euler(temp);
+            yield return null;
+        }
+    }
+    IEnumerator TurnUp3()
+    {
+        float t = transform.localEulerAngles.z;
+        while (t > 0)
+        {
+            t -= 10;
+            Vector3 temp = transform.rotation.eulerAngles;
+            temp = new Vector3(0, 0, t);
+            transform.rotation = Quaternion.Euler(temp);
+            yield return null;
+        }
+    }
+
+    IEnumerator TurnDown3()
+    {
+        float t = transform.localEulerAngles.z -360;
+        while (t < -180)
+        {
+            t += 10;
+            Vector3 temp = transform.rotation.eulerAngles;
+            temp = new Vector3(0, 0, t);
+            transform.rotation = Quaternion.Euler(temp);
+            yield return null;
+        }
+    }
+
+    //void TurnCar()
+    //{
+    //    if (checkDirection == 0 || checkDirection == 1 || checkDirection == 3)
+    //    {
+    //        //turn right
+    //        if (Input.GetKey(KeyCode.RightArrow))
+    //        {
+    //            if (rotationz > -60)
+    //            {
+    //                rotationz += -5;
+    //                this.transform.Rotate(0, 0, -5);
+    //            }
+    //            speech = 8;
+    //        }
+    //        if (Input.GetKeyUp(KeyCode.RightArrow))
+    //        {
+    //            this.transform.Rotate(0, 0, -rotationz);
+    //            rotationz = 0;
+    //            speech = 5;
+    //        }
+
+    //        //turn left
+    //        if (Input.GetKey(KeyCode.LeftArrow))
+    //        {
+    //            if (rotationz < 60)
+    //            {
+    //                rotationz += 5;
+    //                this.transform.Rotate(0, 0, 5);
+    //            }
+    //            speech = 8;
+    //        }
+    //        if (Input.GetKeyUp(KeyCode.LeftArrow))
+    //        {
+    //            this.transform.Rotate(0, 0, -rotationz);
+    //            rotationz = 0;
+    //            speech = 5;
+    //        }
+    //    }
+
+    //    if (checkDirection == 2)
+    //    {
+    //        //turn left
+    //        if (Input.GetKey(KeyCode.LeftArrow))
+    //        {
+    //            if (rotationz > -60)
+    //            {
+    //                rotationz += -5;
+    //                this.transform.Rotate(0, 0, -5);
+    //            }
+    //            speech = 8;
+    //        }
+    //        if (Input.GetKeyUp(KeyCode.LeftArrow))
+    //        {
+    //            this.transform.Rotate(0, 0, -rotationz);
+    //            rotationz = 0;
+    //            speech = 5;
+    //        }
+
+    //        //turn right
+    //        if (Input.GetKey(KeyCode.RightArrow))
+    //        {
+    //            if (rotationz < 60)
+    //            {
+    //                rotationz += 5;
+    //                this.transform.Rotate(0, 0, 5);
+    //            }
+    //            speech = 8;
+    //        }
+    //        if (Input.GetKeyUp(KeyCode.RightArrow))
+    //        {
+    //            this.transform.Rotate(0, 0, -rotationz);
+    //            rotationz = 0;
+    //            speech = 5;
+    //        }
+    //    }
+    //}
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "map")
