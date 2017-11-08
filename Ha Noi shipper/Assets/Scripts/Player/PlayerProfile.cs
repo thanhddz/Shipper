@@ -5,11 +5,13 @@ using UnityEngine;
 public class PlayerProfile : MonoBehaviour {
 
     public PlayerIndex player;
-    public Sprite[] playCar;
 
-	void Start () {
-        this.GetComponent<SpriteRenderer>().sprite = player.prefab;
+    public Sprite[] carOfPlayer;
+
+    void Start () {
+        player.prefab = carOfPlayer[0];       
     }	
 	void Update () {        
+
 	}
 }

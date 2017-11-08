@@ -4,29 +4,33 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-
-    private Vector2 move;
-    public float speech;
     private Vector2 direction;
     public Transform top;
     public Transform bot;
+
+    private Vector2 position;
+    public float speech;
+    
     private float rotationz = 0;
     public int checkDirection = 0;
 
     private Vector3 begin;
     private Vector3 final;
     public Vector3 mouse;
+    public GameObject player;
 
     void Start()
     {
-        move = transform.position;
+        this.GetComponent<SpriteRenderer>().sprite = player.GetComponent<PlayerProfile>().player.prefab;
+        position = transform.position;
         direction = top.position - bot.position;
     }
 
     void Update()
     {
-        move += direction * Time.deltaTime * speech;
-        this.transform.position = move;
+        this.GetComponent<SpriteRenderer>().sprite = player.GetComponent<PlayerProfile>().player.prefab;
+        position += direction * Time.deltaTime * speech;
+        this.transform.position = position;
         direction = top.position - bot.position;
 
         TurnCar();
@@ -193,8 +197,8 @@ public class CarController : MonoBehaviour
             {
                 if (rotationz > -60)
                 {
-                    rotationz += -10;
-                    this.transform.Rotate(0, 0, -10);
+                    rotationz += -5;
+                    this.transform.Rotate(0, 0, -5);
                 }
                 speech = 8;
             }
@@ -210,8 +214,8 @@ public class CarController : MonoBehaviour
             {
                 if (rotationz < 60)
                 {
-                    rotationz += 10;
-                    this.transform.Rotate(0, 0, 10);
+                    rotationz += 5;
+                    this.transform.Rotate(0, 0, 5);
                 }
                 speech = 8;
             }
@@ -230,8 +234,8 @@ public class CarController : MonoBehaviour
             {
                 if (rotationz > -60)
                 {
-                    rotationz += -10;
-                    this.transform.Rotate(0, 0, -10);
+                    rotationz += -5;
+                    this.transform.Rotate(0, 0, -5);
                 }
                 speech = 8;
             }
@@ -247,8 +251,8 @@ public class CarController : MonoBehaviour
             {
                 if (rotationz < 60)
                 {
-                    rotationz += 10;
-                    this.transform.Rotate(0, 0, 10);
+                    rotationz += 5;
+                    this.transform.Rotate(0, 0, 5);
                 }
                 speech = 8;
             }
@@ -259,5 +263,13 @@ public class CarController : MonoBehaviour
                 speech = 5;
             }
         }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "map")
+        {
+            print("abc");
+        }
+        print("ab");
     }
 }
