@@ -12,7 +12,8 @@ public class CarController : MonoBehaviour
     public float speech;
     
     public float rotationz = 0;
-    public int checkDirection = 0;
+    public float checkDirection = 0;
+    public bool checkTurn;
 
     private Vector3 begin;
     private Vector3 final;
@@ -33,20 +34,22 @@ public class CarController : MonoBehaviour
         position += direction * Time.deltaTime * speech;
         this.transform.position = position;
         direction = top.position - bot.position;
-        if(Input.GetKeyDown(KeyCode.Space))
+
+        if (Input.GetKeyDown(KeyCode.Space))
             print(transform.localEulerAngles);
-        //TurnCar();
+
         DirectionController();           
     }
 
     void DirectionController()
     {
+        
         if (Input.GetKeyDown(KeyCode.Mouse0))
             begin = Input.mousePosition;
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
             final = Input.mousePosition;
-            mouse = final - begin;
+            mouse = final - begin;          
         }
 
         if (checkDirection == 0)
@@ -55,15 +58,15 @@ public class CarController : MonoBehaviour
             {
                 if (mouse.x > 0)
                 {
-                    StopCoroutine(TurnUp1());
+                    checkDirection = -1;
                     StartCoroutine(TurnRight0());
-                    checkDirection = 1;
+                    
                 }
                 if (mouse.x < 0)
                 {
-                    StopCoroutine(TurnUp3());
+                    checkDirection = -1;
                     StartCoroutine(TurnLeft0());
-                    checkDirection = 3;
+                    
                 }
             }
         }
@@ -74,15 +77,15 @@ public class CarController : MonoBehaviour
             {
                 if (mouse.y > 0)
                 {
-                    StopCoroutine(TurnRight0());
+                    checkDirection = -1;
                     StartCoroutine(TurnUp1());
-                    checkDirection = 0;
+                    
                 }
                 if (mouse.y < 0)
                 {
-                    StopCoroutine(TurnRight2());
+                    checkDirection = -1;
                     StartCoroutine(TurnDown1());
-                    checkDirection = 2;
+                    
                 }
             }
         }
@@ -93,16 +96,15 @@ public class CarController : MonoBehaviour
             {
                 if (mouse.x > 0)
                 {
-                    StopCoroutine(TurnDown1());
+                    checkDirection = -1;
                     StartCoroutine(TurnRight2());
-                    checkDirection = 1;
-                    
+                                      
                 }
                 if (mouse.x < 0)
                 {
-                    StopCoroutine(TurnDown3());
+                    checkDirection = -1;
                     StartCoroutine(TurnLeft2());
-                    checkDirection = 3;                   
+                                      
                 }
             }
         }
@@ -113,17 +115,14 @@ public class CarController : MonoBehaviour
             {
                 if (mouse.y > 0)
                 {
-                    StopCoroutine(TurnLeft0());
+                    checkDirection = -1;
                     StartCoroutine(TurnUp3());
-                    checkDirection = 0;
-                   
+                                       
                 }
                 if (mouse.y < 0)
                 {
-                    StopCoroutine(TurnLeft2());
-                    StartCoroutine(TurnDown3());
-                    checkDirection = 2;
-                    
+                    checkDirection = -1;
+                    StartCoroutine(TurnDown3());                                       
                 }
             }
         }
@@ -132,183 +131,202 @@ public class CarController : MonoBehaviour
     IEnumerator TurnRight0()
     {
         float t = transform.localEulerAngles.z;
-        
-        while(t > -90)
+        if (t < 1 || t > 359)
         {
-            t -= 10;
+            t = 360;
+        }
+ 
+        while (t > 271)
+        {
+            if (Mathf.Abs(mouse.y) > Mathf.Abs(mouse.x) && mouse.y > 0)
+            {
+                checkDirection = 1;
+                yield break;
+            }                                        
+            t -= angle;
             Vector3 temp = transform.rotation.eulerAngles;
             temp = new Vector3( 0, 0, t);
             transform.rotation =  Quaternion.Euler(temp);
             yield return null;
         }
+        mouse = new Vector3(0, 0, 0);
+        checkDirection = 1;
     }
 
     IEnumerator TurnLeft0()  
     {
         float t = transform.localEulerAngles.z;
-        while (t < 90)
+        if (t < 1 || t > 359)
         {
-            t += 10;
+            t = 0;
+        }
+
+        while (t < 89)
+        {
+            if (Mathf.Abs(mouse.y) > Mathf.Abs(mouse.x) && mouse.y > 0)
+            {
+                checkDirection = 3;
+                yield break;
+            }                
+            t += angle;
             Vector3 temp = transform.rotation.eulerAngles;
             temp = new Vector3(0, 0, t);
             transform.rotation = Quaternion.Euler(temp);
             yield return null;
         }
+        mouse = new Vector3(0, 0, 0);
+        checkDirection = 3;
     }
 
     IEnumerator TurnRight2()
     {
-        float t = transform.localEulerAngles.z -360;
-        while (t < -90)
+        float t = transform.localEulerAngles.z;
+        if (t > 179 && t < 181)
         {
-            t += 10;
+            t = 180;
+        }
+
+        while (t < 269)
+        {
+            if (Mathf.Abs(mouse.y) > Mathf.Abs(mouse.x) && mouse.y < 0)
+            {
+                checkDirection = 1;
+                yield break;
+            }                
+            t += angle;
             Vector3 temp = transform.rotation.eulerAngles;
             temp = new Vector3(0, 0, t);
             transform.rotation = Quaternion.Euler(temp);
             yield return null;
         }
+        mouse = new Vector3(0, 0, 0);
+        checkDirection = 1;
     }
 
     IEnumerator TurnLeft2()
     {
         float t = transform.localEulerAngles.z;
-        while (t > 90)
+        if (t > 179 && t < 181)
         {
-            t -= 10;
+            t = 180;
+        }
+
+        while (t > 91)
+        {
+            if (Mathf.Abs(mouse.y) > Mathf.Abs(mouse.x) && mouse.y < 0)
+            {
+                checkDirection = 3;
+                yield break;
+            }                
+            t -= angle;
             Vector3 temp = transform.rotation.eulerAngles;
             temp = new Vector3(0, 0, t);
             transform.rotation = Quaternion.Euler(temp);
             yield return null;
         }
+        mouse = new Vector3(0, 0, 0);
+        checkDirection = 3;
     }
 
     IEnumerator TurnUp1()
     {
-        float t = transform.localEulerAngles.z - 360;
-        while (t < 0)
+        float t = transform.localEulerAngles.z;
+        if (t > 269 && t < 271)
         {
-            t += 10;
+            t = 270;
+        }
+
+        while (t < 359)
+        {
+            if (Mathf.Abs(mouse.y) < Mathf.Abs(mouse.x) && mouse.x > 0)
+            {
+                checkDirection = 0;
+                yield break;
+            }               
+            t += angle;
             Vector3 temp = transform.rotation.eulerAngles;
             temp = new Vector3(0, 0, t);
             transform.rotation = Quaternion.Euler(temp);
             yield return null;
         }
+        mouse = new Vector3(0, 0, 0);
+        checkDirection = 0;
     }
 
     IEnumerator TurnDown1()
     {
-        float t = transform.localEulerAngles.z - 360;
-        while (t > -180)
+        float t = transform.localEulerAngles.z;
+        if (t > 269 && t < 271)
         {
-            t -= 10;
+            t = 270;
+        }
+
+        while (t > 181)
+        {
+            if (Mathf.Abs(mouse.y) < Mathf.Abs(mouse.x) && mouse.x > 0)
+            {
+                checkDirection = 2;
+                yield break;
+            }
+            t -= angle;
             Vector3 temp = transform.rotation.eulerAngles;
             temp = new Vector3(0, 0, t);
             transform.rotation = Quaternion.Euler(temp);
             yield return null;
         }
+        mouse = new Vector3(0, 0, 0);
+        checkDirection = 2;
     }
     IEnumerator TurnUp3()
     {
         float t = transform.localEulerAngles.z;
-        while (t > 0)
+        if (t > 89 && t < 91)
         {
-            t -= 10;
+            t = 90;
+        }
+
+        while (t > 1)
+        {
+            if (Mathf.Abs(mouse.y) < Mathf.Abs(mouse.x) && mouse.x < 0)
+            {
+                checkDirection = 0;
+                yield break;                
+            }              
+            t -= angle;
             Vector3 temp = transform.rotation.eulerAngles;
             temp = new Vector3(0, 0, t);
             transform.rotation = Quaternion.Euler(temp);
             yield return null;
         }
+        mouse = new Vector3(0, 0, 0);
+        checkDirection = 0;
     }
 
     IEnumerator TurnDown3()
     {
-        float t = transform.localEulerAngles.z -360;
-        while (t < -180)
+        float t = transform.localEulerAngles.z;
+        if (t > 89 && t < 91)
         {
-            t += 10;
+            t = 90;
+        }
+
+        while (t < 179)
+        {
+            if (Mathf.Abs(mouse.y) < Mathf.Abs(mouse.x) && mouse.x < 0)
+            {
+                checkDirection = 2;
+                yield break;
+            }
+            t += angle;
             Vector3 temp = transform.rotation.eulerAngles;
             temp = new Vector3(0, 0, t);
             transform.rotation = Quaternion.Euler(temp);
             yield return null;
         }
+        mouse = new Vector3(0, 0, 0);
+        checkDirection = 2;
     }
 
-    //void TurnCar()
-    //{
-    //    if (checkDirection == 0 || checkDirection == 1 || checkDirection == 3)
-    //    {
-    //        //turn right
-    //        if (Input.GetKey(KeyCode.RightArrow))
-    //        {
-    //            if (rotationz > -60)
-    //            {
-    //                rotationz += -5;
-    //                this.transform.Rotate(0, 0, -5);
-    //            }
-    //            speech = 8;
-    //        }
-    //        if (Input.GetKeyUp(KeyCode.RightArrow))
-    //        {
-    //            this.transform.Rotate(0, 0, -rotationz);
-    //            rotationz = 0;
-    //            speech = 5;
-    //        }
-
-    //        //turn left
-    //        if (Input.GetKey(KeyCode.LeftArrow))
-    //        {
-    //            if (rotationz < 60)
-    //            {
-    //                rotationz += 5;
-    //                this.transform.Rotate(0, 0, 5);
-    //            }
-    //            speech = 8;
-    //        }
-    //        if (Input.GetKeyUp(KeyCode.LeftArrow))
-    //        {
-    //            this.transform.Rotate(0, 0, -rotationz);
-    //            rotationz = 0;
-    //            speech = 5;
-    //        }
-    //    }
-
-    //    if (checkDirection == 2)
-    //    {
-    //        //turn left
-    //        if (Input.GetKey(KeyCode.LeftArrow))
-    //        {
-    //            if (rotationz > -60)
-    //            {
-    //                rotationz += -5;
-    //                this.transform.Rotate(0, 0, -5);
-    //            }
-    //            speech = 8;
-    //        }
-    //        if (Input.GetKeyUp(KeyCode.LeftArrow))
-    //        {
-    //            this.transform.Rotate(0, 0, -rotationz);
-    //            rotationz = 0;
-    //            speech = 5;
-    //        }
-
-    //        //turn right
-    //        if (Input.GetKey(KeyCode.RightArrow))
-    //        {
-    //            if (rotationz < 60)
-    //            {
-    //                rotationz += 5;
-    //                this.transform.Rotate(0, 0, 5);
-    //            }
-    //            speech = 8;
-    //        }
-    //        if (Input.GetKeyUp(KeyCode.RightArrow))
-    //        {
-    //            this.transform.Rotate(0, 0, -rotationz);
-    //            rotationz = 0;
-    //            speech = 5;
-    //        }
-    //    }
-    //}
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "map")

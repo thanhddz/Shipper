@@ -1479,12 +1479,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   top: {fileID: 57057898}
   bot: {fileID: 914790589}
-  speech: 5
+  speech: 9
   rotationz: 0
   checkDirection: 0
+  checkTurn: 0
   mouse: {x: 0, y: 0, z: 0}
   player: {fileID: 182859058}
-  angle: 30
+  angle: 3
 --- !u!212 &1834866088
 SpriteRenderer:
   m_ObjectHideFlags: 0
