@@ -14,20 +14,28 @@ public class CameraController : MonoBehaviour
     {
         Vector3 desiredPosition = target.position + offset;
 
-        if (carController.GetComponent<CarController>().checkDirection == 0)
+        if (carController.GetComponent<CarController>().checkDirection == 0)    
         {
-            offset = new Vector3(0, 3, -10);
-            
+            offset = new Vector3(0, 10, -25);
+            smoothSpeed = Vector3.Distance(this.transform.position, desiredPosition)/7;
         }
             
         if (carController.GetComponent<CarController>().checkDirection == 2)
         {
-            offset = new Vector3(0, -3, -10);
+            offset = new Vector3(0, -10f, -25);
+            smoothSpeed = Vector3.Distance(this.transform.position, desiredPosition)/7;
         }
 
-        if (carController.GetComponent<CarController>().checkDirection == 1 || carController.GetComponent<CarController>().checkDirection == 3)
+        if (carController.GetComponent<CarController>().checkDirection == 1)
         {
-            offset = new Vector3(0, 0, -10);
+            offset = new Vector3(20, 0, -25);
+            smoothSpeed = Vector3.Distance(this.transform.position, desiredPosition)/15;
+        }
+
+        if (carController.GetComponent<CarController>().checkDirection == 3)
+        {
+            offset = new Vector3(-20, 0, -25);
+            smoothSpeed = Vector3.Distance(this.transform.position, desiredPosition)/15;
         }
 
         if (transform.position == desiredPosition)

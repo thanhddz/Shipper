@@ -5,6 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerIndex
 {
-    public Sprite prefab;
-    public int fuelIndex;
-}
+    public CarIndex carUsing;
+    public int gold;
+} 

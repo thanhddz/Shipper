@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: f720e63e0f848624184e395af83b3d1b
+timeCreated: 1513413096
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: HP-Lam Nam
+  fontNames:
+  - HP-Lam Nam
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

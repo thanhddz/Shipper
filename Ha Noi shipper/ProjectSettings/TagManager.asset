@@ -5,6 +5,31 @@ TagManager:
   serializedVersion: 2
   tags:
   - map
+  - carstop
+  - 1
+  - 2
+  - 3
+  - 0
+  - sensor
+  - 3'
+  - 2'
+  - 1'
+  - 0'
+  - stoplight0
+  - stoplight1
+  - stoplight2
+  - stoplight3
+  - playerprofile
+  - golddisplaygame
+  - spirit
+  - police
+  - 0_police
+  - 1_police
+  - 2_police
+  - 3_police
+  - speeddown
+  - admobmanage
+  - policepoint
   layers:
   - Default
   - TransparentFX
@@ -14,8 +39,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - test
+  - carminimap
   - 
   - 
   - 
